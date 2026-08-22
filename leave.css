@@ -1,0 +1,348 @@
+/* ==========================================================================
+   LEAVE.CSS
+   Design tokens + layout for the HRMS Leave Management page.
+   Uses the same token system as attendance.css so both pages feel like
+   one product.
+   ========================================================================== */
+
+:root {
+  /* --- Color tokens (matches attendance.css) --- */
+  --color-bg: #F3F5F9;
+  --color-surface: #FFFFFF;
+  --color-primary: #263866;
+  --color-primary-dark: #1A2747;
+  --color-primary-soft: #EEF1FA;
+
+  --color-text: #1B2338;
+  --color-text-muted: #6B7385;
+  --color-border: #E3E7EF;
+
+  --color-present: #12A594;   /* teal   - success / casual leave */
+  --color-absent: #E15554;    /* coral  - error / sick leave     */
+  --color-half: #F0A202;      /* amber  - warning / earned leave */
+  --color-leave: #6C6FE0;     /* violet - leave accent           */
+
+  --color-present-bg: #E4F7F4;
+  --color-absent-bg: #FCEAEA;
+  --color-half-bg: #FDF3E0;
+
+  /* --- Type --- */
+  --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* --- Layout --- */
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-card: 0 1px 2px rgba(20, 25, 40, 0.04), 0 4px 16px rgba(20, 25, 40, 0.05);
+}
+
+/* ==========================================================================
+   RESET
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-base);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, p, ul {
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+.app-header {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.app-logo {
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+}
+
+.app-module {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.72);
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  padding-left: 10px;
+}
+
+.header-right {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ==========================================================================
+   PAGE / LAYOUT
+   ========================================================================== */
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+}
+
+.page-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ==========================================================================
+   CARDS
+   ========================================================================== */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 26px;
+}
+
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.card-subtitle {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+}
+
+/* ==========================================================================
+   FORM
+   ========================================================================== */
+#leaveForm {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 11px 13px;
+  font-size: 0.92rem;
+  color: var(--color-text);
+  background: var(--color-surface);
+  transition: border-color 0.15s ease;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--color-primary);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+/* Inline field validation message */
+.form-error {
+  font-size: 0.84rem;
+  color: var(--color-absent);
+  min-height: 1.1em;
+}
+
+/* Success / error banner above the form */
+.form-message {
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.form-message.success {
+  background: var(--color-present-bg);
+  color: var(--color-present);
+}
+
+.form-message.error {
+  background: var(--color-absent-bg);
+  color: var(--color-absent);
+}
+
+/* ==========================================================================
+   BUTTON
+   ========================================================================== */
+.btn {
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 13px 22px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
+  align-self: flex-start;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-apply {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  min-width: 160px;
+}
+
+.btn-apply:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+
+/* ==========================================================================
+   INFO CARD (RIGHT SIDE)
+   ========================================================================== */
+.leave-type-list {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.leave-type-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.leave-type-list strong {
+  font-size: 0.9rem;
+}
+
+.leave-type-list p {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-top: 3px;
+}
+
+.type-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.dot-casual { background: var(--color-present); }
+.dot-sick   { background: var(--color-absent); }
+.dot-earned { background: var(--color-half); }
+
+.info-note {
+  margin-top: 22px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.app-footer {
+  text-align: center;
+  padding: 18px;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 900px) {
+  .page-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-header {
+    padding: 14px 18px;
+  }
+
+  .page {
+    padding: 20px 14px 40px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-apply {
+    width: 100%;
+  }
+}

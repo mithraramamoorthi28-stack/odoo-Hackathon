@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leave Management | HRMS</title>
+  <link rel="stylesheet" href="leave.css" />
+</head>
+<body>
+
+  <!-- ============ TOP HEADER ============ -->
+  <header class="app-header">
+    <div class="header-left">
+      <span class="app-logo">HRMS</span>
+      <span class="app-module">Leave Management</span>
+    </div>
+    <div class="header-right" id="todayDate">
+      <!-- Today's date is injected by leave.js -->
+    </div>
+  </header>
+
+  <main class="page">
+
+    <div class="page-grid">
+
+      <!-- ============ LEFT COLUMN: LEAVE APPLICATION FORM ============ -->
+      <section class="card form-card" aria-labelledby="leaveFormHeading">
+        <h1 id="leaveFormHeading" class="card-title">Apply for Leave</h1>
+        <p class="card-subtitle">Fill in the details below to submit a new leave request.</p>
+
+        <!-- Message area for success / error feedback -->
+        <div id="formMessage" class="form-message" role="alert" aria-live="polite" hidden></div>
+
+        <form id="leaveForm" novalidate>
+
+          <div class="form-group">
+            <label for="employeeId">Employee ID</label>
+            <input
+              type="text"
+              id="employeeId"
+              name="employeeId"
+              value="101"
+              autocomplete="off"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="leaveType">Leave Type</label>
+            <select id="leaveType" name="leaveType" required>
+              <option value="" disabled selected>Select leave type</option>
+              <option value="Casual Leave">Casual Leave</option>
+              <option value="Sick Leave">Sick Leave</option>
+              <option value="Earned Leave">Earned Leave</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="startDate">Start Date</label>
+              <input type="date" id="startDate" name="startDate" required />
+            </div>
+
+            <div class="form-group">
+              <label for="endDate">End Date</label>
+              <input type="date" id="endDate" name="endDate" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="remarks">Remarks</label>
+            <textarea
+              id="remarks"
+              name="remarks"
+              rows="4"
+              placeholder="Briefly explain the reason for leave"
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-error" id="fieldError" aria-live="polite"></div>
+
+          <button type="submit" class="btn btn-apply" id="applyBtn">
+            <span id="applyBtnText">Apply Leave</span>
+          </button>
+
+        </form>
+      </section>
+
+      <!-- ============ RIGHT COLUMN: INFO / GUIDANCE ============ -->
+      <aside class="card info-card" aria-labelledby="infoHeading">
+        <h2 id="infoHeading" class="card-title">Leave Types</h2>
+
+        <ul class="leave-type-list">
+          <li>
+            <span class="type-dot dot-casual"></span>
+            <div>
+              <strong>Casual Leave</strong>
+              <p>For short personal matters planned in advance.</p>
+            </div>
+          </li>
+          <li>
+            <span class="type-dot dot-sick"></span>
+            <div>
+              <strong>Sick Leave</strong>
+              <p>For health-related absences.</p>
+            </div>
+          </li>
+          <li>
+            <span class="type-dot dot-earned"></span>
+            <div>
+              <strong>Earned Leave</strong>
+              <p>Accrued leave earned through service.</p>
+            </div>
+          </li>
+        </ul>
+
+        <div class="info-note">
+          <strong>Note:</strong> Leave requests are reviewed by your manager and will
+          show as <em>Pending</em> until approved.
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <p>HRMS &mdash; Attendance &amp; Leave Management Module</p>
+  </footer>
+
+  <script src="leave.js"></script>
+</body>
+</html>
