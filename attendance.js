@@ -262,23 +262,72 @@ function renderAll() {
      }
    ========================================================================== */
 
-function handleCheckIn() {
-  todayState.checkInTime = getCurrentTimeLabel();
-  todayState.status = "present";
+async function handleCheckIn() {
+  try {
+    const response = await fetch("http://localhost:5000/api/attendance/check-in", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        employeeId: employee.id
+      })
+    });
 
-  renderStatusPill();
-  renderTodayPanel();
-  renderActionButtons();
+    const data = await response.json();
+
+    if (!data.success) {
+      alert(data.message || "Check-in failed");
+      return;
+    }
+
+    todayState.checkInTime = data.checkInTime;
+    todayState.status = data.status;
+
+    renderStatusPill();
+    renderTodayPanel();
+    renderActionButtons();
+
+  } catch (error) {
+    console.error(error);
+    alert("Backend server is not connected.");
+  }
 }
 
-function handleCheckOut() {
-  todayState.checkOutTime = getCurrentTimeLabel();
 
-  renderStatusPill();
-  renderTodayPanel();
-  renderActionButtons();
+async function handleCheckOut() {
+  try {
+    const response = await fetch("http://localhost:5000/api/attendance/check-out", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        employeeId: employee.id
+      })
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      alert(data.message || "Check-out failed");
+      return;
+    }
+
+    todayState.checkOutTime = data.checkOutTime;
+    todayState.status = data.status === "completed"
+      ? "present"
+      : data.status;
+
+    renderStatusPill();
+    renderTodayPanel();
+    renderActionButtons();
+
+  } catch (error) {
+    console.error(error);
+    alert("Backend server is not connected.");
+  }
 }
-
 /* ==========================================================================
    7. EVENT LISTENERS
    ========================================================================== */
