@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dayflow — Sign in</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="auth-shell">
+  <div class="auth-art">
+    <div class="brand-mark">Day<span style="color:var(--amber)">flow</span></div>
+    <div class="tagline">Every workday,<br/><em>perfectly aligned.</em></div>
+    <div id="weekPreview" style="max-width:340px;"></div>
+  </div>
+
+  <div class="auth-form-wrap">
+    <div class="auth-form">
+
+      <!-- SIGN IN -->
+      <div id="signinPanel">
+        <div class="eyebrow">Welcome back</div>
+        <h1>Sign in</h1>
+        <p class="sub">Use your work email to access your dashboard.</p>
+
+        <div class="banner" id="signinBanner"></div>
+
+        <form id="signinForm" novalidate>
+          <div class="field" id="siEmailField">
+            <label for="siEmail">Email</label>
+            <input type="email" id="siEmail" placeholder="you@dayflow.com" autocomplete="username" />
+            <div class="error-text">Enter a valid email address.</div>
+          </div>
+          <div class="field" id="siPasswordField">
+            <label for="siPassword">Password</label>
+            <input type="password" id="siPassword" placeholder="••••••••" autocomplete="current-password" />
+            <div class="error-text">Password is required.</div>
+          </div>
+          <button type="submit" class="btn btn-accent btn-block">Sign in</button>
+        </form>
+
+        <div class="auth-switch">
+          New to Dayflow? <a href="#" id="goSignup">Create an account</a>
+        </div>
+        <div class="auth-switch" style="margin-top:8px;">
+          Demo admin: admin@dayflow.com / Admin@123<br/>
+          Demo employee: arun@dayflow.com / Emp@1234
+        </div>
+      </div>
+
+      <!-- SIGN UP -->
+      <div id="signupPanel" style="display:none;">
+        <div class="eyebrow">Get started</div>
+        <h1>Create account</h1>
+        <p class="sub">Register with your employee ID to join Dayflow.</p>
+
+        <div class="banner" id="signupBanner"></div>
+
+        <form id="signupForm" novalidate>
+          <div class="role-toggle" id="roleToggle">
+            <button type="button" data-role="employee" class="active">Employee</button>
+            <button type="button" data-role="admin">HR / Admin</button>
+          </div>
+
+          <div class="field" id="suNameField">
+            <label for="suName">Full name</label>
+            <input type="text" id="suName" placeholder="Arun Kumar" />
+            <div class="error-text">Name is required.</div>
+          </div>
+          <div class="field" id="suIdField">
+            <label for="suId">Employee ID</label>
+            <input type="text" id="suId" placeholder="EMP-1004" />
+            <div class="error-text">Employee ID is required.</div>
+          </div>
+          <div class="field" id="suEmailField">
+            <label for="suEmail">Email</label>
+            <input type="email" id="suEmail" placeholder="you@dayflow.com" />
+            <div class="error-text">Enter a valid email address.</div>
+          </div>
+          <div class="field" id="suPasswordField">
+            <label for="suPassword">Password</label>
+            <input type="password" id="suPassword" placeholder="Min. 8 characters, 1 number" />
+            <div class="error-text">Min 8 chars, at least one number & one letter.</div>
+          </div>
+          <button type="submit" class="btn btn-accent btn-block">Create account</button>
+        </form>
+
+        <div class="auth-switch">
+          Already have an account? <a href="#" id="goSignin">Sign in</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  // If already signed in, skip straight to the right dashboard.
+  (function redirectIfLoggedIn() {
+    const user = getSessionUser();
+    if (user) {
+      window.location.href = user.role === 'admin' ? 'admin-dashboard.html' : 'dashboard.html';
+    }
+  })();
+
+  document.getElementById('weekPreview').innerHTML = buildDayStrip(
+    getAllAttendance().filter(a => a.empId === 'EMP-1002')
+  );
+
+  const signinPanel = document.getElementById('signinPanel');
+  const signupPanel = document.getElementById('signupPanel');
+  document.getElementById('goSignup').addEventListener('click', (e) => {
+    e.preventDefault();
+    signinPanel.style.display = 'none';
+    signupPanel.style.display = 'block';
+  });
+  document.getElementById('goSignin').addEventListener('click', (e) => {
+    e.preventDefault();
+    signupPanel.style.display = 'none';
+    signinPanel.style.display = 'block';
+  });
+
+  /* ---------- Sign in ---------- */
+  function setError(fieldId, has) {
+    document.getElementById(fieldId).classList.toggle('has-error', has);
+  }
+
+  document.getElementById('signinForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('siEmail').value.trim();
+    const password = document.getElementById('siPassword').value;
+    const banner = document.getElementById('signinBanner');
+    banner.className = 'banner';
+
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    setError('siEmailField', !emailOk);
+    setError('siPasswordField', !password);
+    if (!emailOk || !password) return;
+
+    const user = findUserByEmail(email);
+    if (!user || user.password !== password) {
+      banner.textContent = 'Incorrect email or password. Please try again.';
+      banner.classList.add('error', 'show');
+      return;
+    }
+
+    setSession(user.id);
+    banner.textContent = 'Signed in — redirecting…';
+    banner.classList.add('success', 'show');
+    setTimeout(() => {
+      window.location.href = user.role === 'admin' ? 'admin-dashboard.html' : 'dashboard.html';
+    }, 400);
+  });
+
+  /* ---------- Sign up ---------- */
+  let selectedRole = 'employee';
+  document.getElementById('roleToggle').addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    selectedRole = btn.dataset.role;
+    document.querySelectorAll('#roleToggle button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+
+  document.getElementById('signupForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('suName').value.trim();
+    const empId = document.getElementById('suId').value.trim();
+    const email = document.getElementById('suEmail').value.trim();
+    const password = document.getElementById('suPassword').value;
+    const banner = document.getElementById('signupBanner');
+    banner.className = 'banner';
+
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const passOk = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(password);
+
+    setError('suNameField', !name);
+    setError('suIdField', !empId);
+    setError('suEmailField', !emailOk);
+    setError('suPasswordField', !passOk);
+    if (!name || !empId || !emailOk || !passOk) return;
+
+    const result = registerUser({ name, empId, email, password, role: selectedRole });
+    if (!result.ok) {
+      banner.textContent = result.error;
+      banner.classList.add('error', 'show');
+      return;
+    }
+
+    banner.textContent = 'Account created. Signing you in…';
+    banner.classList.add('success', 'show');
+    setSession(result.user.id);
+    setTimeout(() => {
+      window.location.href = selectedRole === 'admin' ? 'admin-dashboard.html' : 'dashboard.html';
+    }, 500);
+  });
+</script>
+</body>
+</html>
