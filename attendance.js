@@ -24,10 +24,9 @@
    ========================================================================== */
 
 const employee = {
-  id: "EMP-2043",
+  id: "101",
   name: "Priya Sharma",
 };
-
 // Dummy attendance history (most recent last is fine, we render as-is).
 const attendanceHistory = [
   { date: "2026-08-11", checkIn: "09:02 AM", checkOut: "06:05 PM", hours: "9.0", status: "present" },
