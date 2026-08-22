@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Attendance | HRMS</title>
+  <link rel="stylesheet" href="attendance.css" />
+</head>
+<body>
+
+  <!-- ============ TOP HEADER ============ -->
+  <header class="app-header">
+    <div class="header-left">
+      <span class="app-logo">HRMS</span>
+      <span class="app-module">Attendance</span>
+    </div>
+    <div class="header-right" id="todayDate">
+      <!-- Today's date is injected by attendance.js -->
+    </div>
+  </header>
+
+  <main class="page">
+
+    <!-- ============ EMPLOYEE + STATUS BAR ============ -->
+    <section class="employee-bar" aria-label="Employee summary">
+      <div class="employee-identity">
+        <div class="avatar" id="employeeAvatar">--</div>
+        <div class="employee-text">
+          <h1 id="employeeName">Loading…</h1>
+          <p id="employeeId">Employee ID: --</p>
+        </div>
+      </div>
+
+      <div class="status-pill" id="statusPill" data-status="pending">
+        <span class="status-dot"></span>
+        <span id="statusLabel">Fetching status…</span>
+      </div>
+    </section>
+
+    <div class="dashboard-grid">
+
+      <!-- ============ LEFT COLUMN ============ -->
+      <div class="dashboard-main">
+
+        <!-- Check In / Check Out card -->
+        <section class="card" aria-labelledby="attendanceActionsHeading">
+          <h2 id="attendanceActionsHeading" class="card-title">Today's Attendance</h2>
+
+          <div class="time-grid">
+            <div class="time-block">
+              <span class="time-label">Check-In Time</span>
+              <span class="time-value" id="checkInTime">--:--</span>
+            </div>
+            <div class="time-block">
+              <span class="time-label">Check-Out Time</span>
+              <span class="time-value" id="checkOutTime">--:--</span>
+            </div>
+            <div class="time-block">
+              <span class="time-label">Today's Status</span>
+              <span class="time-value" id="todayStatusValue">--</span>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button type="button" id="checkInBtn" class="btn btn-checkin">
+              Check In
+            </button>
+            <button type="button" id="checkOutBtn" class="btn btn-checkout" disabled>
+              Check Out
+            </button>
+          </div>
+
+          <p class="action-hint" id="actionHint">Tap "Check In" to begin your work day.</p>
+        </section>
+
+        <!-- Attendance history table -->
+        <section class="card" aria-labelledby="historyHeading">
+          <div class="card-title-row">
+            <h2 id="historyHeading" class="card-title">Attendance History</h2>
+            <span class="card-subtitle">Last 10 working days</span>
+          </div>
+
+          <div class="table-wrap">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Check-In</th>
+                  <th scope="col">Check-Out</th>
+                  <th scope="col">Hours</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody">
+                <!-- Rows injected by attendance.js -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ============ RIGHT COLUMN ============ -->
+      <aside class="dashboard-side">
+
+        <!-- Monthly summary card with progress ring -->
+        <section class="card" aria-labelledby="summaryHeading">
+          <h2 id="summaryHeading" class="card-title">Monthly Summary</h2>
+          <p class="card-subtitle" id="summaryMonthLabel">--</p>
+
+          <div class="ring-wrap">
+            <svg class="progress-ring" width="150" height="150" viewBox="0 0 150 150">
+              <circle class="ring-track" cx="75" cy="75" r="62" />
+              <circle class="ring-progress" id="ringProgress" cx="75" cy="75" r="62" />
+            </svg>
+            <div class="ring-center">
+              <span class="ring-percent" id="ringPercent">0%</span>
+              <span class="ring-caption">Present</span>
+            </div>
+          </div>
+
+          <ul class="summary-list">
+            <li>
+              <span class="summary-dot dot-total"></span>
+              <span class="summary-label">Total Working Days</span>
+              <span class="summary-value" id="totalDays">--</span>
+            </li>
+            <li>
+              <span class="summary-dot dot-present"></span>
+              <span class="summary-label">Present Days</span>
+              <span class="summary-value" id="presentDays">--</span>
+            </li>
+            <li>
+              <span class="summary-dot dot-absent"></span>
+              <span class="summary-label">Absent Days</span>
+              <span class="summary-value" id="absentDays">--</span>
+            </li>
+            <li>
+              <span class="summary-dot dot-leave"></span>
+              <span class="summary-label">Leave Days</span>
+              <span class="summary-value" id="leaveDays">--</span>
+            </li>
+          </ul>
+        </section>
+
+      </aside>
+
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <p>HRMS &mdash; Attendance &amp; Leave Management Module (Frontend Preview, Dummy Data)</p>
+  </footer>
+
+  <script src="attendance.js"></script>
+</body>
+</html>
