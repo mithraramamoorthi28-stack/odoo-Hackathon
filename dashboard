@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Attendance & Leave Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f6f9; }
+    .card { background: white; padding: 15px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    button { background-color: #714B67; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; }
+    button:disabled { background-color: #ccc; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #e2e8f0; }
+    .badge { padding: 4px 8px; border-radius: 4px; color: white; font-size: 12px; }
+    .Pending { background: orange; } .Approved { background: green; } .Rejected { background: red; }
+  </style>
+</head>
+<body>
+
+  <h1>Attendance & Leave Dashboard</h1>
+
+  <!-- Attendance Section -->
+  <div class="card">
+    <h2>1. Attendance Management</h2>
+    <p>Status: <strong id="attendanceStatus">Checked Out</strong></p>
+    <button id="checkInBtn" onclick="toggleCheckIn()">Check In</button>
+    
+    <h3>Daily Log</h3>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Check In</th><th>Check Out</th><th>Status</th></tr>
+      </thead>
+      <tbody id="attendanceTable"></tbody>
+    </table>
+  </div>
+
+  <!-- Leave Management Section -->
+  <div class="card">
+    <h2>2. Apply for Leave</h2>
+    <form id="leaveForm" onsubmit="handleLeaveSubmit(event)">
+      <label>Leave Type:</label>
+      <select id="leaveType">
+        <option value="Paid">Paid Leave</option>
+        <option value="Sick">Sick Leave</option>
+        <option value="Unpaid">Unpaid Leave</option>
+      </select><br><br>
+
+      <label>Start Date:</label> <input type="date" id="startDate" required>
+      <label>End Date:</label> <input type="date" id="endDate" required><br><br>
+
+      <label>Remarks:</label><br>
+      <textarea id="remarks" rows="2" cols="40" required></textarea><br><br>
+
+      <button type="submit">Submit Request</button>
+    </form>
+
+    <h3>My Leave Requests</h3>
+    <table>
+      <thead>
+        <tr><th>Type</th><th>Dates</th><th>Remarks</th><th>Status</th></tr>
+      </thead>
+      <tbody id="leaveTable"></tbody>
+    </table>
+  </div>
+
+  <script>
+    // System Data State
+    let isCheckedIn = false;
+    let checkInTime = null;
+    let attendanceLogs = [];
+    let leaveRequests = [];
+
+    // Attendance Functionality
+    function toggleCheckIn() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString();
+      const dateStr = now.toLocaleDateString();
+
+      if (!isCheckedIn) {
+        isCheckedIn = true;
+        checkInTime = timeStr;
+        document.getElementById('attendanceStatus').innerText = `Checked In at ${timeStr}`;
+        document.getElementById('checkInBtn').innerText = 'Check Out';
+      } else {
+        isCheckedIn = false;
+        attendanceLogs.push({
+          date: dateStr,
+          checkIn: checkInTime,
+          checkOut: timeStr,
+          status: 'Present'
+        });
+        document.getElementById('attendanceStatus').innerText = 'Checked Out';
+        document.getElementById('checkInBtn').innerText = 'Check In';
+        renderAttendance();
+      }
+    }
+
+    function renderAttendance() {
+      const tbody = document.getElementById('attendanceTable');
+      tbody.innerHTML = attendanceLogs.map(log => `
+        <tr>
+          <td>${log.date}</td>
+          <td>${log.checkIn}</td>
+          <td>${log.checkOut}</td>
+          <td>${log.status}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Leave Functionality
+    function handleLeaveSubmit(e) {
+      e.preventDefault();
+      const newLeave = {
+        type: document.getElementById('leaveType').value,
+        dates: `${document.getElementById('startDate').value} to ${document.getElementById('endDate').value}`,
+        remarks: document.getElementById('remarks').value,
+        status: 'Pending'
+      };
+
+      leaveRequests.push(newLeave);
+      document.getElementById('leaveForm').reset();
+      renderLeaves();
+    }
+
+    function renderLeaves() {
+      const tbody = document.getElementById('leaveTable');
+      tbody.innerHTML = leaveRequests.map(req => `
+        <tr>
+          <td>${req.type}</td>
+          <td>${req.dates}</td>
+          <td>${req.remarks}</td>
+          <td><span class="badge ${req.status}">${req.status}</span></td>
+        </tr>
+      `).join('');
+    }
+  </script>
+</body>
+</html>
